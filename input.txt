@@ -1,3 +1,3 @@
-{{'Home and Learning' | translate}} Tutorials Point is giving self {{'Your Networks Uppercase' | uppercase}} learning content
+{{'Home and Learning' | translate}}  Tutorials Point is giving self {{'Your Networks Uppercase' | uppercase}} learning content
 to teach the world in simple and easy way {{'levarne4sharne' | translate}}
 
