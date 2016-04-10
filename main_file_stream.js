@@ -2,8 +2,6 @@
  * Created by levarnesobotker on 2016/04/08.
  */
 
-//path needs to be prefixed
-
 "use strict";
 
 var fs = require('fs');
@@ -79,21 +77,11 @@ var Translatable = function(){
                 var stats = fs.statSync(file);
 
                 if(stats.isDirectory()){
-                    if(file.indexOf('.') == 0)
-                        return
-
-                    var file_dir = fs.readdirSync(file);
-
-                    file_dir.forEach(function(_file){
-                        _readToStream(_file);
-                    });
+                    console.log("is dir: " + file );
                 }
 
                 if(stats.isFile()){
-                    if(file.indexOf('.') == 0)
-                        return
-
-                    _readToStream(file);
+                    console.log("is file: " + file);
                 };
             });
 
@@ -145,9 +133,7 @@ var Translatable = function(){
 
             matches =  _findIndexOfStr(data_as_str, 'translation');
 
-            _writeToJson(matches);
-
-            // eventEmitter.emit('writeToJson', matches);
+            eventEmitter.emit('writeToJson', matches);
         }
     }
 
