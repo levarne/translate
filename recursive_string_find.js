@@ -16,10 +16,11 @@ var file_location = '../../ManaltoProjects/Soshlr/SoshlrWeb/src/app';
 var accessible_files = ['.txt','.html', '.html.tpl', '.tpl.html'];
 
 var Translatable = function(){
-    var appendToObj = {};
-    var indices = [];
-    var matches = [];
-    var fileList = [];
+    var appendToObj = {},
+        indices = [],
+        matches = [],
+        fileList = [],
+        match_filelocation = [];
 
     //public function , to be as a constructor, (projectSrc)
     this.getTranslations = function(projectSrc){
@@ -45,6 +46,20 @@ var Translatable = function(){
                 var jsonStr = JSON.stringify(appendToObj, null, " ");
 
                 console.log(jsonStr);
+            },
+            debugMatchFileLocatoin : function(){
+                console.log('************************');
+                console.log('**    MATCH STRING FILE LOCATION     **');
+                console.log('************************');
+
+                console.log(match_filelocation);
+            },
+            writeToJsonFile : function(){
+                _ToFile();
+
+                return {
+                    ToStringJson : this.ToStringJson()
+                }
             }
         }
     };
@@ -80,14 +95,14 @@ var Translatable = function(){
         file_array.forEach(function(file){
             var data_as_str = fs.readFileSync(file).toString();
 
-            matches = _findIndexOfStr(data_as_str);
+            matches = _findIndexOfStr(data_as_str, file);
         });
 
         return matches;
     }
 
     //output '"string" | translate'
-    var _findIndexOfStr = function(haystack){
+    var _findIndexOfStr = function(haystack, fileName){
         var regex = new RegExp(/[^\{}]*translate/g);
 
         var array_str = [];
@@ -97,6 +112,9 @@ var Translatable = function(){
             if(array_str[0]){
                 var clean_string = _cleanString(array_str[0]);
                 indices.push(clean_string);
+
+                //for debug, each match has its file location appended
+                _debugMatchLocation(clean_string, fileName);
             }
         }
 
@@ -123,9 +141,26 @@ var Translatable = function(){
             if(appendToObj.hasOwnProperty(match)){
 
             }else{
-                appendToObj[match] = " ";
+                appendToObj[match] = "";
             }
         });
+    }
+
+    var _ToFile = function(){
+        var jsonStr = JSON.stringify(appendToObj, null, " ");
+        
+        console.log('************************');
+        console.log('** Write JSON TO FILE **');
+        console.log('************************');
+
+        var writeStatus = fs.writeFileSync(jsonFile, jsonStr, 'utf8');
+
+        console.log(writeStatus);
+    }
+
+    //for debug, each match has its file location appended
+    var _debugMatchLocation = function(clean_string, fileName){
+        match_filelocation.push(clean_string + " : " + fileName);
     }
 
 }
@@ -138,12 +173,16 @@ var transect = new Translatable();
 // transect.getTranslations(file_location);
 
 //return jsosn output of whta will be written to file
-//transect.getTranslations(file_location).ToStringJson();
+// transect.getTranslations(file_location).ToStringJson();
 
 //returns all files that match accessible_files and its location = dir
- transect.getTranslations(file_location).ToStringMatch();
+ //transect.getTranslations(file_location).ToStringMatch();
 
+// returns all match string and its location
+ transect.getTranslations(file_location).debugMatchFileLocatoin();
 
+//overide current json file, does not append to
+// transect.getTranslations(file_location).writeToJsonFile();
 
 console.log(' ');
 console.log('** end app **');
